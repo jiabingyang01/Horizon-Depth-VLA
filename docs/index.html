@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Horizon × Depth | Flow-Matching VLA Policies</title>
+  <meta name="description" content="Coupling execution horizon and sampling depth in flow-matching VLA policies: fewer Euler steps hurt when the policy replans often and help when it executes long open-loop prefixes, because truncated integration shrinks the spread of the sampled action chunk around a nearly unchanged centre. Anonymous project page for double-blind review.">
+  <meta name="theme-color" content="#f5f8f7">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/theme.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<a class="skip-link" href="#overview">Skip to content</a>
+
+<!-- ============================================================ NAV -->
+<nav class="nav" id="nav" aria-label="Sections">
+  <div class="nav-inner">
+    <a class="brand" href="#top" aria-label="Back to top">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true">
+        <defs><linearGradient id="bm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e40af"/><stop offset=".5" stop-color="#0284c7"/><stop offset="1" stop-color="#059669"/></linearGradient></defs>
+        <rect x="1" y="1" width="24" height="24" rx="7" fill="url(#bm)"/>
+        <path d="M5.5 13 L20.5 6.5 L20.5 19.5 Z" fill="#fff" opacity=".32"/>
+        <path d="M5.5 13 L20.5 10.2 L20.5 15.8 Z" fill="#fff" opacity=".95"/>
+        <circle cx="5.5" cy="13" r="1.8" fill="#fff"/>
+      </svg>
+      <span class="brand-text"><em>Horizon × Depth</em></span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#phenomenon">Phenomenon</a></li>
+      <li><a href="#mechanism">Mechanism</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#analysis">Analysis</a></li>
+      <li><a href="#rollouts">Rollouts</a>
+      <a href="#citation">Citation</a></li>
+    </ul>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Open section menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+  </div>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+</nav>
+
+<!-- ============================================================ HERO -->
+<header class="hero" id="top">
+  <canvas id="hero-canvas" aria-hidden="true"></canvas>
+  <div class="hero-inner">
+    <div class="hero-kicker">
+      <span class="badge-acc">s × N</span>
+      <span>Flow-matching VLA deployment · training-free</span>
+    </div>
+    <h1 class="hero-title">
+      <span class="line">Coupling <em>Execution Horizon</em></span>
+      <span class="line">and <em>Sampling Depth</em></span>
+    </h1>
+    <p class="hero-sub">in Flow-Matching Vision-Language-Action Policies</p>
+    <div class="hero-authors-block">
+      <p class="hero-authors">
+        <a href="https://jiabingyang01.github.io/" target="_blank" rel="noopener" class="author-link"><strong>Jiabing Yang</strong></a><sup>1,2,5</sup>,
+        <strong>Yuan Xu</strong><sup>1,2</sup>,
+        <strong>Yixiang Chen</strong><sup>1,2</sup>,
+        <strong>Qisen Ma</strong><sup>1,2</sup>,
+        <strong>Peiyan Li</strong><sup>1,2</sup>,
+        <strong>Kai Wang</strong><sup>1,2</sup>,
+        <strong>Chenhang Cui</strong><sup>3</sup>,
+        <strong>Tao Yu</strong><sup>1,2</sup>,
+        <br class="desktop-br">
+        <strong>Zichen Wen</strong><sup>4</sup>,
+        <strong>Wen Ye</strong><sup>1,2</sup>,
+        <strong>Bowen Fang</strong><sup>1,2</sup>,
+        <strong>Ziheng He</strong><sup>1,2</sup>,
+        <strong>Xiangnan Wu</strong><sup>1,2</sup>,
+        <strong>Yingda Li</strong><sup>1,2</sup>,
+        <strong>Yan Huang</strong><sup>1,2,5,&dagger;</sup>,
+        <strong>Liang Wang</strong><sup>1,2</sup>
+      </p>
+      <p class="hero-affils">
+        <span><sup>1</sup>School of Artificial Intelligence, University of Chinese Academy of Sciences</span>
+        <span><sup>2</sup>NLPR, Institute of Automation, Chinese Academy of Sciences</span>
+        <br class="desktop-br">
+        <span><sup>3</sup>National University of Singapore</span>
+        <span><sup>4</sup>Shanghai Jiao Tong University</span>
+        <span><sup>5</sup>FiveAges</span>
+        <span><sup>&dagger;</sup>Corresponding Author</span>
+      </p>
+    </div>
+    <ul class="hero-facts" id="hero-facts" aria-label="Scope of the evaluation"></ul>
+    <div class="hero-actions" id="hero-links"></div>
+  </div>
+  <div class="hero-legend" aria-hidden="true"><span><i style="background:#2563eb"></i>N = 10</span><span><i style="background:#059669"></i>N = 2</span><span>Euler steps τ: 1 → 0, then the open-loop rollout</span></div>
+</header>
+
+<main id="main">
+
+<!-- ============================================================ 01 OVERVIEW -->
+<section class="section" id="overview" aria-labelledby="overview-title">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="idx">01</span>Overview</span>
+      <h2 class="sec-title" id="overview-title">Two deployment knobs, <em>one coupled choice</em></h2>
+    </div>
+
+    <div class="card tldr reveal">
+      <span class="tldr-tag">TL;DR</span>
+      <p data-t="tldr"></p>
+    </div>
+
+    <div class="results-row" id="key-results" aria-label="Key results"></div>
+
+    <details class="abstract reveal">
+      <summary><span>Abstract</span><svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="body"><p data-t="abstract"></p></div>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ 02 PHENOMENON -->
+<section class="section tint" id="phenomenon" aria-labelledby="phenomenon-title">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="idx">02</span>Phenomenon</span>
+      <h2 class="sec-title" id="phenomenon-title">Fewer steps hurt fast replanning <em>and help long open-loop runs</em></h2>
+      <p class="lede" data-t="phenomenon/lede"></p>
+    </div>
+
+    <div class="grid-2 wide-left">
+      <div class="card reveal">
+        <div class="card-head">
+          <div class="ttl">The sign reversal<small data-t="phenomenon/phen_sub"></small></div>
+          <button class="fig-link" type="button" data-fig-open="phenomenon"></button>
+        </div>
+        <div class="controls mb-8">
+          <span class="ctl"><span class="ctl-label">Backbone</span><span class="seg" id="ph-model" role="group" aria-label="Backbone"></span></span>
+        </div>
+        <div class="chart" id="ph-chart"></div>
+        <div class="legend" id="ph-legend"></div>
+      </div>
+      <div class="card reveal">
+        <div class="card-head">
+          <div class="ttl">π<sub>0</sub> on LIBERO-Long in one picture<small>The 2 × 2 of Table I: each line follows one execution horizon from the default 10 steps to 2 steps.</small></div>
+          <span class="data-tag">Table I</span>
+        </div>
+        <div class="chart" id="ph-cross"></div>
+        <div class="quad mt-16" id="ph-quad"></div>
+      </div>
+    </div>
+
+    <div class="card mt-24 reveal">
+      <div class="card-head">
+        <div class="ttl">The full horizon × depth grid<small data-t="phenomenon/grid_sub"></small></div>
+        <button class="fig-link" type="button" data-fig-open="grid"></button>
+      </div>
+      <div class="controls mb-16">
+        <span class="ctl"><span class="ctl-label">Backbone</span><span class="seg" id="gx-model" role="group" aria-label="Backbone"></span></span>
+      </div>
+      <div class="grid-explorer">
+        <div class="chart" id="gx-chart"></div>
+        <div class="gx-side" id="gx-side"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 03 MECHANISM -->
+<section class="section" id="mechanism" aria-labelledby="mechanism-title">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="idx">03</span>Mechanism</span>
+      <h2 class="sec-title" id="mechanism-title">Truncation shrinks the cloud, <em>not its centre</em></h2>
+      <p class="lede" data-t="mechanism/lede"></p>
+    </div>
+
+    <figure class="card figure-card reveal">
+      <img src="assets/img/pipeline.webp" width="3559" height="1826" loading="lazy" decoding="async" data-zoom data-fig="pipeline" alt="">
+      <figcaption class="caption"><b>Figure 2.</b> <span data-t="figures/pipeline/caption"></span></figcaption>
+    </figure>
+
+    <div class="grid-2 mt-24">
+      <div class="card reveal">
+        <h3 class="label">Deployment: N Euler steps, then s actions open loop</h3>
+        <div class="eq-panel"><div class="eq sm"><img src="assets/img/eq/euler.svg" style="--w:30.639em" alt="x of k plus one equals x of k minus delta tau times the velocity field at x of k, tau k and the observation; delta tau equals one over N and tau k equals one minus k over N" decoding="async"></div>
+          <div class="eq sm"><img src="assets/img/eq/exec.svg" style="--w:15.793em" alt="the executed action a k equals the predicted action for k from t to t plus s minus one" decoding="async"></div></div>
+        <p class="note">Every evaluation of <span class="m"><i>v<sub>θ</sub></i></span> is a full forward pass of the backbone, so <span class="m"><i>N</i></span> is also the number of function evaluations per query. The policy is queried again at <span class="m"><i>t</i>&nbsp;+&nbsp;<i>s</i></span> with a fresh observation and fresh noise.</p>
+      </div>
+      <div class="card reveal">
+        <h3 class="label">Proposition 1 · Euler truncation contraction (Gaussian target)</h3>
+        <div class="eq-panel"><div class="eq sm"><img src="assets/img/eq/velocity.svg" style="--w:31.914em" alt="the marginal velocity is affine: alpha of tau times x minus one minus tau times mu, minus mu, with alpha of tau given by the Gaussian gain" decoding="async"></div>
+          <div class="eq sm"><img src="assets/img/eq/centroid.svg" style="--w:13.559em" alt="the expectation of the emitted chunk equals mu for all N" decoding="async"></div>
+          <div class="eq sm"><img src="assets/img/eq/cov.svg" style="--w:28.695em" alt="the covariance equals rho of N times sigma zero squared times the identity, with rho of N the product over steps of one minus alpha of tau k over N, squared, over sigma zero squared" decoding="async"></div>
+          <div class="eq sm"><img src="assets/img/eq/rate.svg" style="--w:29.878em" alt="rho of N equals one minus c over N plus order N to the minus two, with c equal to two plus the integral of alpha squared" decoding="async"></div></div>
+        <p class="note">The mean is integrated exactly for every <span class="m"><i>N</i></span>; the spread is multiplied by <span class="m"><i>g</i>(<i>N</i>)&nbsp;=&nbsp;√<i>ρ</i>(<i>N</i>)</span>, which is 0 at <span class="m"><i>N</i>&nbsp;=&nbsp;1</span> and approaches 1 at the rate <span class="m">1&nbsp;−&nbsp;<i>c</i>/<i>N</i></span>.</p>
+      </div>
+    </div>
+
+    <div class="sub-head mt-48 reveal">
+      <h3 class="sub">Euler contraction, live</h3>
+      <p class="muted" data-t="mechanism/lab_sub"></p>
+    </div>
+    <div class="card widget reveal" id="lab">
+      <div class="widget-top">
+        <span class="ctl"><span class="ctl-label">Euler steps <span class="m"><i>N</i></span></span><span class="nseg" id="lab-n" role="group" aria-label="Number of Euler steps"></span></span>
+        <button class="icon-btn" id="lab-play" aria-pressed="true"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg><span>Pause</span></button>
+      </div>
+      <div class="widget-body">
+        <div class="widget-stage">
+          <div class="lab-stage">
+            <div class="lab-canvas" id="lab-canvas-wrap"><canvas id="lab-canvas" aria-hidden="true"></canvas></div>
+            <div><div class="chart" id="lab-chart"></div></div>
+          </div>
+          <div class="lab-eq" id="lab-eq"></div>
+        </div>
+        <div class="widget-side">
+          <div class="slider-row">
+            <label for="lab-sigma">Target spread <span class="m"><i>σ</i><sub>0</sub></span></label>
+            <input type="range" id="lab-sigma" min="150" max="1500" step="1" value="587">
+            <output id="lab-sigma-out" for="lab-sigma"></output>
+          </div>
+          <div class="readout" aria-live="polite">
+            <div class="k">Variance gain <span class="m"><i>g</i>(<i>N</i>)&nbsp;=&nbsp;√<i>ρ</i>(<i>N</i>)</span></div>
+            <div class="v" id="lab-g"></div>
+            <div class="n" id="lab-rho"></div>
+            <div class="meter"><i id="lab-bar"></i></div>
+          </div>
+          <div class="readout" id="lab-ratio"></div>
+        </div>
+      </div>
+      <div class="widget-foot">
+        <span class="note-inline" id="lab-foot"></span>
+        <span class="data-tag">exact for a Gaussian target</span>
+      </div>
+    </div>
+
+    <div class="grid-2 mt-32">
+      <div class="card reveal">
+        <div class="card-head">
+          <div class="ttl">(a) Cloud radius vs. sampling depth<small data-t="mechanism/fig4a_sub"></small></div>
+          <button class="fig-link" type="button" data-fig-open="mechanism"></button>
+        </div>
+        <div class="chart" id="m-radius"></div>
+        <div class="legend" id="m-radius-legend"></div>
+      </div>
+      <div class="card reveal">
+        <div class="card-head">
+          <div class="ttl">(b) Open-loop spread over the horizon<small data-t="mechanism/fig4b_sub"></small></div>
+          <button class="fig-link" type="button" data-fig-open="mechanism"></button>
+        </div>
+        <div class="chart" id="m-spread"></div>
+        <div class="legend" id="m-spread-legend"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 04 RESULTS -->
+<section class="section tint" id="results" aria-labelledby="results-title">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="idx">04</span>Results</span>
+      <h2 class="sec-title" id="results-title">Higher success <em>at a fraction of the latency</em></h2>
+      <p class="lede" data-t="results/lede"></p>
+    </div>
+
+    <div class="bench-strip n3 reveal" id="bench-strip"></div>
+
+    <div class="tabs" role="tablist" aria-label="Benchmarks" id="results-tabs">
+      <button class="tab" role="tab" id="tab-libero" aria-controls="panel-libero" aria-selected="true">LIBERO</button>
+      <button class="tab" role="tab" id="tab-robotwin" aria-controls="panel-robotwin" aria-selected="false" tabindex="-1">RoboTwin 2.0</button>
+      <button class="tab" role="tab" id="tab-real" aria-controls="panel-real" aria-selected="false" tabindex="-1">Real world</button>
+    </div>
+
+    <!-- LIBERO -->
+    <div class="tabpanel" role="tabpanel" id="panel-libero" aria-labelledby="tab-libero" tabindex="0">
+      <div class="controls mb-16">
+        <span class="ctl"><span class="ctl-label">Backbone</span><span class="seg" id="lib-model" role="group" aria-label="Backbone"></span></span>
+      </div>
+      <div class="grid-2 wide-left">
+        <div class="card">
+          <div class="card-head">
+            <div class="ttl">Interaction per suite<small>Each panel follows the short and the long horizon from the default depth to two steps; lines that cross reverse the sign of the depth effect.</small></div>
+            <span class="data-tag">Table I</span>
+          </div>
+          <div class="chart" id="lib-multiples"></div>
+          <div class="legend" id="lib-mult-legend"></div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div class="ttl">Success vs. per-step latency<small>LIBERO average; the latency is per control step, amortized over the executed actions.</small></div>
+          </div>
+          <div class="chart" id="lib-pareto"></div>
+        </div>
+      </div>
+      <div class="table-wrap mt-24"><table class="rt fact-table" id="lib-table"></table></div>
+      <p class="table-caption" id="lib-caption"></p>
+    </div>
+
+    <!-- RoboTwin -->
+    <div class="tabpanel" role="tabpanel" id="panel-robotwin" aria-labelledby="tab-robotwin" tabindex="0" hidden>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head">
+            <div class="ttl">Depth effect by horizon<small>Δ<sub>s</sub> = Y<sub>s,2</sub> − Y<sub>s,10</sub> over the 50 tasks, with the number of tasks where two steps lose ground.</small></div>
+            <span class="data-tag">Table II</span>
+          </div>
+          <div class="chart" id="rt-delta"></div>
+          <div class="legend" id="rt-delta-legend"></div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div class="ttl">Average success of the six configurations<small id="rt-avg-sub"></small></div>
+          </div>
+          <div class="controls mb-8">
+            <span class="ctl"><span class="ctl-label">Backbone</span><span class="seg" id="rt-model" role="group" aria-label="Backbone"></span></span>
+          </div>
+          <div class="chart" id="rt-avg"></div>
+          <div class="legend" id="rt-avg-legend"></div>
+        </div>
+      </div>
+      <div class="card mt-24">
+        <div class="card-head">
+          <div class="ttl">All 50 tasks<small>Success per task (100 rollouts each); click a column header to sort. The ten tasks printed in Table II are tagged.</small></div>
+        </div>
+        <div class="controls mb-8">
+          <span class="ctl"><span class="ctl-label">Backbone</span><span class="seg" id="rt-table-model" role="group" aria-label="Backbone"></span></span>
+        </div>
+        <div class="table-wrap rt-scroll"><table class="rt fact-table" id="rt-table"></table></div>
+        <p class="table-caption" id="rt-caption"></p>
+      </div>
+      <p class="note mt-16" data-t="results/robotwin_note"></p>
+    </div>
+
+    <!-- REAL WORLD -->
+    <div class="tabpanel" role="tabpanel" id="panel-real" aria-labelledby="tab-real" tabindex="0" hidden>
+      <div id="real-root"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 05 ANALYSIS -->
+<section class="section" id="analysis" aria-labelledby="analysis-title">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="idx">05</span>Analysis</span>
+      <h2 class="sec-title" id="analysis-title">It is the redraws, <em>not just less noise</em></h2>
+      <p class="lede sm" data-t="analysis/lede"></p>
+    </div>
+
+    <div class="card reveal">
+      <div class="card-head">
+        <div class="ttl">Causal interventions on π<sub>0</sub> / LIBERO-Long<small>Two-step minus ten-step success at s = 5 and s = 20 for each condition; the interaction is the change between them.</small></div>
+        <span class="data-tag">Table III</span>
+      </div>
+      <div class="chart" id="iv-chart"></div>
+      <div class="legend" id="iv-legend"></div>
+      <div class="int-grid mt-24" id="iv-cards"></div>
+      <p class="caption" data-t="analysis/interventions_note"></p>
+    </div>
+
+    <ul class="find-list mt-32 reveal" id="find-list"></ul>
+  </div>
+</section>
+
+<!-- ============================================================ 06 ROLLOUTS -->
+<section class="section tint" id="rollouts" aria-labelledby="rollouts-title">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="idx">06</span>Rollouts</span>
+      <h2 class="sec-title" id="rollouts-title">Same scene, <em>four deployments</em></h2>
+      <p class="lede" data-t="videos/lede"></p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Rollout videos" id="video-tabs"></div>
+    <div id="video-panels"></div>
+  </div>
+</section>
+
+
+  <!-- ===================== 07 · CITATION ===================== -->
+  <section id="citation" class="section">
+    <div class="section-head">
+      <span class="section-num">07</span>
+      <div>
+        <h2 class="section-title">Citation</h2>
+        <p class="section-sub">If you find our empirical findings or analysis useful in your research, please consider citing our paper.</p>
+      </div>
+    </div>
+    <div class="card bibtex-card">
+      <pre class="bibtex-pre"><code>@article{yang2026coupling,
+  title   = {Coupling Execution Horizon and Sampling Depth in Flow-Matching VLA Policies},
+  author  = {Yang, Jiabing and Xu, Yuan and Chen, Yixiang and Ma, Qisen and Li, Peiyan and Wang, Kai and Cui, Chenhang and Yu, Tao and Wen, Zichen and Ye, Wen and Fang, Bowen and He, Ziheng and Wu, Xiangnan and Li, Yingda and Huang, Yan and Wang, Liang},
+  journal = {arXiv preprint},
+  year    = {2026}
+}</code></pre>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <span class="brand-text"><em>Horizon × Depth</em> · Flow-Matching VLA Policies</span>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Figure viewer">
+  <button class="close" id="lb-close" aria-label="Close figure viewer">×</button>
+  <figure><img id="lb-img" alt=""><figcaption id="lb-cap"></figcaption></figure>
+</div>
+<div class="tip" id="tip" role="tooltip"></div>
+
+<noscript><p class="noscript">This page renders its figures and numbers with JavaScript; please enable it to view the results.</p></noscript>
+
+<!-- data -->
+<script src="assets/data/colors.js"></script>
+<script src="assets/data/paper_data.js"></script>
+<script src="assets/data/fig_data.js"></script>
+<script src="assets/data/text.js"></script>
+<script src="assets/videos/manifest.js"></script>
+<!-- page code -->
+<script src="assets/js/main.js"></script>
+<script src="assets/js/charts.js"></script>
+<script src="assets/js/player.js"></script>
+<script src="assets/js/hero.js"></script>
+<script src="assets/js/overview.js"></script>
+<script src="assets/js/phenomenon.js"></script>
+<script src="assets/js/mechanism.js"></script>
+<script src="assets/js/results.js"></script>
+<script src="assets/js/analysis.js"></script>
+<script src="assets/js/rollouts.js"></script>
+<script>SITE.boot();</script>
+</body>
+</html>

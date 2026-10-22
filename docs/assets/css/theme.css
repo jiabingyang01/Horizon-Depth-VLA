@@ -1,0 +1,208 @@
+/* =========================================================================
+   Horizon × depth theme. Colour roles follow the paper's figures:
+   blue = deep sampling (N = N0), green = shallow sampling (N = 2); the four
+   cells of the 2 x 2 design use the colours of the real-world figure
+   (short horizon: royal blue / sky, long horizon: amber / emerald);
+   backbones in Figure 1 keep matplotlib's blue / orange / green.
+   ========================================================================= */
+:root {
+  --bg: #f5f8f7;
+  --bg-2: #eaf0ee;
+  --surface: #ffffff;
+  --ink: #111a1c;
+  --ink-2: #33403f;
+  --muted: #5b6867;
+  --faint: #748180;
+  --line: rgba(17, 26, 28, 0.09);
+  --line-2: rgba(17, 26, 28, 0.16);
+  --grid: rgba(17, 26, 28, 0.028);
+
+  --acc: #059669;
+  --acc-deep: #047857;
+  --acc-light: #34d399;
+  --acc-wash: rgba(5, 150, 105, 0.08);
+  --acc-wash-2: rgba(5, 150, 105, 0.15);
+  --acc-wash-solid: #ebf6f1;
+  --acc-wash-hover: #ddf0e7;
+  --acc-grad: linear-gradient(118deg, #1e40af 0%, #0284c7 36%, #059669 70%, #34d399 100%);
+
+  --deep: #2563eb;
+  --shallow: #059669;
+  --c-sd: #2563eb;   /* short horizon, deep */
+  --c-ss: #0ea5e9;   /* short horizon, shallow */
+  --c-ld: #f97316;   /* long horizon, deep */
+  --c-ls: #10b981;   /* long horizon, shallow */
+
+  --pos: #0f7a4f;
+  --pos-bg: rgba(15, 122, 79, 0.1);
+  --neg: #b4233c;
+  --neg-bg: rgba(180, 35, 60, 0.08);
+
+  --tint: linear-gradient(180deg, rgba(234, 240, 238, 0.66), rgba(234, 240, 238, 0.18));
+  --callout-bg: linear-gradient(135deg, rgba(5, 150, 105, 0.06), rgba(37, 99, 235, 0.03));
+  --eq-bg: linear-gradient(135deg, rgba(37, 99, 235, 0.04), rgba(5, 150, 105, 0.035));
+  --eq-line: rgba(5, 150, 105, 0.13);
+  --shadow: 0 1px 2px rgba(17, 26, 28, 0.04), 0 10px 28px -14px rgba(10, 60, 50, 0.16);
+  --nav-bg: rgba(245, 248, 247, 0.72);
+  --nav-bg-solid: rgba(245, 248, 247, 0.94);
+  --footer-bg: rgba(234, 240, 238, 0.55);
+  --code-k: #86efac;
+}
+
+/* ------------------------------------------------------------------ hero */
+.hero {
+  background:
+    radial-gradient(55% 45% at 18% 30%, rgba(37, 99, 235, 0.10), transparent 72%),
+    radial-gradient(55% 45% at 82% 70%, rgba(5, 150, 105, 0.12), transparent 72%),
+    linear-gradient(180deg, #f7faf9 0%, var(--bg) 100%);
+  padding: calc(var(--nav-h) + 88px) 0 64px;
+  min-height: min(820px, 100vh);
+}
+.hero-inner { max-width: 1120px; }
+.hero-kicker { background: rgba(255, 255, 255, 0.85); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.badge-acc { letter-spacing: 0.02em; }
+.hero-title { font-size: clamp(38px, 6.2vw, 84px); letter-spacing: -0.04em; }
+.hero-title em { padding-right: 0.02em; }
+.hero-sub { color: var(--ink-2); }
+.hero-facts { list-style: none; margin: 28px auto 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 900px; }
+.hero-facts li { display: inline-flex; align-items: baseline; gap: 8px; padding: 8px 14px; border-radius: 999px; background: rgba(255, 255, 255, 0.82); border: 1px solid var(--line); font-size: 13.5px; color: var(--ink-2); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.hero-facts li b { font-size: 15px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+.hero-legend { position: absolute; left: 50%; transform: translateX(-50%); bottom: 14px; display: inline-flex; align-items: center; gap: 16px; font-size: 11.5px; color: var(--muted); font-family: var(--mono); white-space: nowrap; }
+.hero-legend i { display: inline-block; width: 18px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+
+/* ------------------------------------------------------------------ 2 x 2 chips */
+.cfg-chip { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 12.5px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: rgba(17, 26, 28, 0.05); color: var(--ink-2); white-space: nowrap; }
+.cfg-chip i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.quad { display: grid; grid-template-columns: auto 1fr 1fr; gap: 6px; font-variant-numeric: tabular-nums; }
+.quad .h { font-size: 12px; font-weight: 650; color: var(--muted); text-align: center; align-self: end; }
+.quad .r { font-size: 12px; font-weight: 650; color: var(--muted); align-self: center; padding-right: 6px; }
+.quad .c { border-radius: 10px; padding: 10px 12px; text-align: center; background: var(--bg); border: 1px solid var(--line); }
+.quad .c b { display: block; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+.quad .c small { font-size: 12px; color: var(--muted); }
+.quad .c.best { border-color: var(--c-ls); box-shadow: 0 0 0 1px var(--c-ls) inset; background: #eefaf4; }
+
+/* ------------------------------------------------------------------ phenomenon */
+.grid-explorer { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 26px; align-items: start; }
+.gx-side .kv b small { font-weight: 500; color: var(--muted); margin-left: 4px; }
+.gx-side h3.label { margin-top: 4px; }
+.best-mark { stroke: #111a1c; stroke-width: 2; fill: none; }
+
+/* ------------------------------------------------------------------ mechanism: Euler lab */
+.lab-stage { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 18px; align-items: stretch; }
+.lab-canvas { position: relative; border-radius: var(--r-sm); background: radial-gradient(90% 90% at 50% 50%, #ffffff, #f2f6f5); border: 1px solid var(--line); min-height: 320px; overflow: hidden; }
+.lab-canvas canvas { width: 100%; height: 100%; position: absolute; inset: 0; }
+.lab-canvas .lab-lbl { position: absolute; font-family: var(--mono); font-size: 11.5px; color: var(--muted); pointer-events: none; }
+.lab-eq { margin-top: 14px; padding: 12px 14px; border-radius: var(--r-sm); background: var(--acc-wash); font-size: 14px; color: var(--ink-2); line-height: 1.55; }
+.lab-eq b { color: var(--ink); }
+.nseg { display: flex; flex-wrap: wrap; gap: 6px; }
+.nseg button { min-width: 38px; height: 32px; border-radius: 10px; border: 1px solid var(--line-2); background: #fff; font-family: var(--mono); font-size: 13px; font-weight: 600; cursor: pointer; color: var(--ink-2); }
+.nseg button[aria-pressed="true"] { background: var(--acc-deep); color: #fff; border-color: var(--acc-deep); }
+.nseg button:hover { border-color: var(--acc-light); }
+
+/* ------------------------------------------------------------------ results */
+table.rt.fact-table th, table.rt.fact-table td { padding: 8px 10px; }
+table.rt.fact-table thead tr.sup th { text-align: center; color: var(--ink); font-weight: 650; }
+table.rt td.cell-best .v { font-weight: 700; color: var(--ink); }
+table.rt td.lat { color: var(--muted); font-size: 13px; }
+table.rt td.inter { background: #f4faf7; }
+table.rt tr.lat-row td { background: #fafbfb; font-size: 13px; }
+.cfg-head { display: inline-flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.cfg-head i { width: 22px; height: 3px; border-radius: 2px; display: block; }
+.rt-sort { cursor: pointer; }
+.rt-sort:hover { color: var(--ink); }
+.rt-sort[aria-sort="descending"]::after { content: " ↓"; }
+.rt-sort[aria-sort="ascending"]::after { content: " ↑"; }
+tr.shown-row td:first-child::after { content: "Table II"; margin-left: 8px; font-size: 10.5px; font-weight: 650; color: var(--acc-deep); background: var(--acc-wash); padding: 1px 6px; border-radius: 6px; }
+.rt-scroll { max-height: 560px; overflow: auto; }
+.inter-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+
+/* ------------------------------------------------------------------ analysis */
+.int-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.int-card { padding: 20px; }
+.int-card h3 { margin: 0; font-size: 15.5px; font-weight: 650; }
+.int-card .grp { font-size: 12px; font-weight: 600; color: var(--muted); margin-top: 2px; min-height: 18px; }
+.int-card .ival { margin-top: 12px; display: flex; align-items: baseline; gap: 8px; }
+.int-card .ival b { font-size: 30px; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.int-card .ival span { font-size: 13px; color: var(--muted); }
+.find-list { list-style: none; margin: 32px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.find-list li { padding: 18px 20px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.find-list li b { display: block; font-size: 15.5px; margin-bottom: 6px; }
+.find-list li p { margin: 0; font-size: 14.5px; color: var(--ink-2); line-height: 1.6; }
+
+@media (max-width: 1080px) {
+  .grid-explorer { grid-template-columns: 1fr; }
+  .int-grid, .inter-cards { grid-template-columns: 1fr; }
+}
+@media (max-width: 900px) {
+  .lab-stage { grid-template-columns: 1fr; }
+  .find-list { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .hero { min-height: 0; padding: calc(var(--nav-h) + 40px) 0 60px; }
+  .hero-legend { display: none; }
+  .hero-facts li { font-size: 12.5px; padding: 6px 11px; }
+}
+
+
+/* De-anonymized author block & Citation section */
+.hero-authors-block {
+  margin: 0 0 22px;
+}
+.hero-authors {
+  font-size: 15.5px;
+  color: var(--ink-2);
+  margin: 0 0 8px;
+  line-height: 1.65;
+}
+.hero-authors strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.hero-authors .author-link {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--acc);
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+.hero-authors .author-link:hover {
+  color: var(--acc-deep);
+}
+.hero-authors .author-link strong {
+  color: inherit;
+}
+.hero-authors sup,
+.hero-affils sup {
+  font-size: 0.72em;
+  color: var(--acc-deep);
+  margin-left: 1px;
+}
+.hero-affils {
+  font-size: 13px;
+  color: var(--ink-3);
+  margin: 0;
+  line-height: 1.6;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 16px;
+}
+.hero-affils .desktop-br {
+  flex-basis: 100%;
+  height: 0;
+}
+@media (max-width: 860px) {
+  .desktop-br { display: none; }
+}
+.bibtex-card {
+  padding: 20px 24px;
+  background: var(--bg-soft);
+}
+.bibtex-pre {
+  margin: 0;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
