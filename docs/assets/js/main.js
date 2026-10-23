@@ -5,9 +5,9 @@
    ========================================================================= */
 window.SITE_CONFIG = {
   links: {
-    paper: "",
-    code: "",
-    video: ""
+    paper: "paper.pdf",
+    code: "https://github.com/jiabingyang01/Horizon-Depth-VLA",
+    video: "#rollouts"
   }
 };
 

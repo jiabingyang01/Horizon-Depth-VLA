@@ -143,66 +143,12 @@ tr.shown-row td:first-child::after { content: "Table II"; margin-left: 8px; font
   .hero-facts li { font-size: 12.5px; padding: 6px 11px; }
 }
 
-
-/* De-anonymized author block & Citation section */
-.hero-authors-block {
-  margin: 0 0 22px;
-}
-.hero-authors {
-  font-size: 15.5px;
-  color: var(--ink-2);
-  margin: 0 0 8px;
-  line-height: 1.65;
-}
-.hero-authors strong {
-  color: var(--ink);
-  font-weight: 600;
-}
-.hero-authors .author-link {
-  color: var(--ink);
-  text-decoration: underline;
-  text-decoration-color: var(--acc);
-  text-underline-offset: 3px;
-  transition: color 0.15s ease;
-}
-.hero-authors .author-link:hover {
-  color: var(--acc-deep);
-}
-.hero-authors .author-link strong {
-  color: inherit;
-}
-.hero-authors sup,
-.hero-affils sup {
-  font-size: 0.72em;
-  color: var(--acc-deep);
-  margin-left: 1px;
-}
-.hero-affils {
-  font-size: 13px;
-  color: var(--ink-3);
-  margin: 0;
-  line-height: 1.6;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 4px 16px;
-}
-.hero-affils .desktop-br {
-  flex-basis: 100%;
-  height: 0;
-}
-@media (max-width: 860px) {
-  .desktop-br { display: none; }
-}
-.bibtex-card {
-  padding: 20px 24px;
-  background: var(--bg-soft);
-}
-.bibtex-pre {
-  margin: 0;
-  overflow-x: auto;
-  font-family: var(--mono);
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--ink-2);
-}
+/* De-anonymized author block */
+.hero-authors-block { margin-top: 20px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.hero-authors-block .hero-authors { margin: 0; font-size: 15.5px; line-height: 1.65; color: var(--ink-2); display: block; max-width: 960px; }
+.hero-authors-block .author-link { color: var(--ink); text-decoration: underline; text-decoration-color: rgba(37, 99, 235, 0.45); text-underline-offset: 3px; }
+.hero-authors-block .author-link:hover { color: var(--acc-deep); text-decoration-color: var(--acc-deep); }
+.hero-authors-block sup, .hero-affils sup { font-size: 0.72em; color: var(--acc-deep); margin-left: 1px; }
+.hero-affils { margin: 0; font-size: 13.5px; color: var(--muted); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 10px; max-width: 920px; }
+.hero-affils .sep { width: 3.5px; height: 3.5px; border-radius: 50%; background: var(--faint); display: inline-block; }
+@media (max-width: 860px) { .desktop-br { display: none; } }
