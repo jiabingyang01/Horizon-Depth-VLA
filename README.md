@@ -2,8 +2,8 @@
 
 # Coupling Execution Horizon and Sampling Depth in Flow-Matching VLA Policies
 
-<a href="https://jiabingyang01.github.io/Commitment-VLA/"><img src="https://img.shields.io/badge/Project_Page-Online-2E6F6B?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Project Page"></a>
-<a href="https://jiabingyang01.github.io/Commitment-VLA/paper.pdf"><img src="https://img.shields.io/badge/Paper-PDF-B84A2B?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="Paper PDF"></a>
+<a href="https://jiabingyang01.github.io/Horizon-Depth-VLA/"><img src="https://img.shields.io/badge/Project_Page-Online-2E6F6B?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Project Page"></a>
+<a href="https://jiabingyang01.github.io/Horizon-Depth-VLA/paper.pdf"><img src="https://img.shields.io/badge/Paper-PDF-B84A2B?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="Paper PDF"></a>
 <a href="LICENSE.md"><img src="https://img.shields.io/badge/License-Apache_2.0-4E5D6C?style=for-the-badge" alt="License"></a>
 
 **[English](README.md) | [中文](README_zh.md)**
@@ -54,7 +54,7 @@ In this work, we uncover a **fundamental compute–execution coupling** in flow-
 ## 🗂️ Repository Structure
 
 ```text
-Commitment-VLA/
+Horizon-Depth-VLA/
 ├── docs/                  # Interactive project page (GitHub Pages source)
 │   ├── index.html         # Main project website
 │   ├── paper.pdf          # Camera-ready / arXiv manuscript PDF
