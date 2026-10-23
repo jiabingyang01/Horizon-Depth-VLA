@@ -607,6 +607,142 @@ window.ROLLOUTS = {
    ]
   },
   {
+   "backbone": "π0",
+   "task": "beat_block_hammer",
+   "title": "Beat Block Hammer",
+   "instruction": "Pick up the hammer and strike the target block.",
+   "episode": 0,
+   "episode_label": "scene",
+   "clips": [
+    {
+     "rule": "(10, 10)",
+     "file": "assets/videos/robotwin/pi0_beat_block_hammer_ep0_s10_n10.mp4",
+     "poster": "assets/videos/robotwin/pi0_beat_block_hammer_ep0_s10_n10.jpg",
+     "success": false
+    },
+    {
+     "rule": "(10, 2)",
+     "file": "assets/videos/robotwin/pi0_beat_block_hammer_ep0_s10_n2.mp4",
+     "poster": "assets/videos/robotwin/pi0_beat_block_hammer_ep0_s10_n2.jpg",
+     "success": true
+    },
+    {
+     "rule": "(50, 10)",
+     "file": "assets/videos/robotwin/pi0_beat_block_hammer_ep0_s50_n10.mp4",
+     "poster": "assets/videos/robotwin/pi0_beat_block_hammer_ep0_s50_n10.jpg",
+     "success": false
+    },
+    {
+     "rule": "(50, 2)",
+     "file": "assets/videos/robotwin/pi0_beat_block_hammer_ep0_s50_n2.mp4",
+     "poster": "assets/videos/robotwin/pi0_beat_block_hammer_ep0_s50_n2.jpg",
+     "success": true
+    }
+   ]
+  },
+  {
+   "backbone": "π0",
+   "task": "place_burger_fries",
+   "title": "Place Burger Fries",
+   "instruction": "Place the burger and French fries onto the serving tray.",
+   "episode": 4,
+   "episode_label": "scene",
+   "clips": [
+    {
+     "rule": "(10, 10)",
+     "file": "assets/videos/robotwin/pi0_place_burger_fries_ep4_s10_n10.mp4",
+     "poster": "assets/videos/robotwin/pi0_place_burger_fries_ep4_s10_n10.jpg",
+     "success": true
+    },
+    {
+     "rule": "(10, 2)",
+     "file": "assets/videos/robotwin/pi0_place_burger_fries_ep4_s10_n2.mp4",
+     "poster": "assets/videos/robotwin/pi0_place_burger_fries_ep4_s10_n2.jpg",
+     "success": true
+    },
+    {
+     "rule": "(50, 10)",
+     "file": "assets/videos/robotwin/pi0_place_burger_fries_ep4_s50_n10.mp4",
+     "poster": "assets/videos/robotwin/pi0_place_burger_fries_ep4_s50_n10.jpg",
+     "success": false
+    },
+    {
+     "rule": "(50, 2)",
+     "file": "assets/videos/robotwin/pi0_place_burger_fries_ep4_s50_n2.mp4",
+     "poster": "assets/videos/robotwin/pi0_place_burger_fries_ep4_s50_n2.jpg",
+     "success": true
+    }
+   ]
+  },
+  {
+   "backbone": "π0.5",
+   "task": "stack_blocks_three",
+   "title": "Stack Blocks Three",
+   "instruction": "Stack three blocks on top of each other in the center of the table.",
+   "episode": 3,
+   "episode_label": "scene",
+   "clips": [
+    {
+     "rule": "(10, 10)",
+     "file": "assets/videos/robotwin/pi05_stack_blocks_three_ep3_s10_n10.mp4",
+     "poster": "assets/videos/robotwin/pi05_stack_blocks_three_ep3_s10_n10.jpg",
+     "success": false
+    },
+    {
+     "rule": "(10, 2)",
+     "file": "assets/videos/robotwin/pi05_stack_blocks_three_ep3_s10_n2.mp4",
+     "poster": "assets/videos/robotwin/pi05_stack_blocks_three_ep3_s10_n2.jpg",
+     "success": false
+    },
+    {
+     "rule": "(50, 10)",
+     "file": "assets/videos/robotwin/pi05_stack_blocks_three_ep3_s50_n10.mp4",
+     "poster": "assets/videos/robotwin/pi05_stack_blocks_three_ep3_s50_n10.jpg",
+     "success": true
+    },
+    {
+     "rule": "(50, 2)",
+     "file": "assets/videos/robotwin/pi05_stack_blocks_three_ep3_s50_n2.mp4",
+     "poster": "assets/videos/robotwin/pi05_stack_blocks_three_ep3_s50_n2.jpg",
+     "success": true
+    }
+   ]
+  },
+  {
+   "backbone": "π0.5",
+   "task": "turn_switch",
+   "title": "Turn Switch",
+   "instruction": "Toggle the switch on the tabletop panel.",
+   "episode": 1,
+   "episode_label": "scene",
+   "clips": [
+    {
+     "rule": "(10, 10)",
+     "file": "assets/videos/robotwin/pi05_turn_switch_ep1_s10_n10.mp4",
+     "poster": "assets/videos/robotwin/pi05_turn_switch_ep1_s10_n10.jpg",
+     "success": false
+    },
+    {
+     "rule": "(10, 2)",
+     "file": "assets/videos/robotwin/pi05_turn_switch_ep1_s10_n2.mp4",
+     "poster": "assets/videos/robotwin/pi05_turn_switch_ep1_s10_n2.jpg",
+     "success": false
+    },
+    {
+     "rule": "(50, 10)",
+     "file": "assets/videos/robotwin/pi05_turn_switch_ep1_s50_n10.mp4",
+     "poster": "assets/videos/robotwin/pi05_turn_switch_ep1_s50_n10.jpg",
+     "success": false
+    },
+    {
+     "rule": "(50, 2)",
+     "file": "assets/videos/robotwin/pi05_turn_switch_ep1_s50_n2.mp4",
+     "poster": "assets/videos/robotwin/pi05_turn_switch_ep1_s50_n2.jpg",
+     "success": true
+    }
+   ]
+  },
+  {
    "backbone": "π0.5",
    "task": "place_fan",
    "title": "Place Fan",
