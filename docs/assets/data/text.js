@@ -29,7 +29,7 @@ window.PAPER_TEXT = {
     lede: "Two interventions on π0 LIBERO-Long separate the mechanism from simpler explanations, and two further observations delimit where it applies.",
     interventions_note: "Rescaling the initial noise to match the endpoint radius does not reproduce the reversal: it lowers success at both horizons and flips the interaction to −1.5. Freezing the initial noise across replans removes the redraws that the deep solver relies on under frequent replanning: at s = 5 its success drops from 81.2 to 42.3, while two-step sampling holds at 72.9.",
     findings: [
-      { t: "Forward Euler beats multi-stage solvers at matched evaluations", p: "At s = 20 and the same number of velocity-field evaluations, forward Euler outperforms explicit midpoint, Heun and second-order Runge-Kutta. Multi-stage schemes query the learned velocity field at extrapolated intermediate states, away from the data the network was trained on; at a budget of two evaluations the second stage of a single Heun step expands the dispersion instead of contracting it." },
+      { t: "Forward Euler beats multi-stage solvers at matched evaluations", p: "Across seeds 7/8/9 at s = 20 and matched network evaluations on π0, two-evaluation forward Euler (90.5% ± 0.6%) outperforms explicit midpoint (72.5% ± 1.1%), a stochastic sampler (75.1% ± 0.8%) and single-step Heun (4.4% ± 0.5%); at four evaluations Euler (90.4% ± 1.0%) similarly leads midpoint (83.5% ± 1.2%) and two-step Heun (57.9% ± 1.4%), with the same ordering on π0.5 at s = 10 (Euler 95.1% ± 0.6% vs. Heun 27.6% ± 2.8%). Multi-stage schemes query the learned velocity field at extrapolated intermediate states off the demonstration manifold, compounding dispersion." },
       { t: "The benefit scales with the task's spatial tolerance", p: "Coarse transport tasks with a wide basin of attraction gain the most from long open-loop execution with two steps, while narrow-funnel insertion and contact-rich tasks still need frequent replanning with deep integration to recover from small misalignments." },
       { t: "One step is not a shallower version of two", p: "A single Euler step collapses the chunk onto a biased estimate of the conditional mean instead of contracting its spread, and it lowers success at short and intermediate horizons. From two steps on, the measured cloud radius follows the contraction predicted by Proposition 1." }
     ]
@@ -65,8 +65,8 @@ window.PAPER_TEXT = {
       files: { svg: "assets/img/fig_mechanism.svg" }
     },
     real_world: {
-      group: "Figure 5 (top)", title: "Real-world setup",
-      caption: "The Franka Research 3 platform (left) and the five evaluated manipulation tasks (right).",
+      group: "Figure 5", title: "Real-world Franka Research 3 evaluation (2,400 physical rollouts)",
+      caption: "Physical Franka platform (left), five evaluated manipulation tasks (top right), and real-world factorial results across π0, π0.5, and GR00T-N1.7 over 40 matched rollouts per cell (2,400 physical trials total; bottom right). All four quasi-static tasks replicate the sign reversal (+10.0% on π0, +6.9% on π0.5, +11.3% on GR00T-N1.7 at full-horizon commitment s = H), while the dynamic turntable task requires rapid closed-loop feedback.",
       alt: "Photo of the Franka Research 3 workstation with a ZED 2i camera and SpaceMouse, and two keyframes for each of the five tasks.",
       files: { webp: "assets/img/real_world_setup.webp" }
     }

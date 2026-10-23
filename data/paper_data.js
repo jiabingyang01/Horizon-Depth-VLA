@@ -77,7 +77,7 @@ window.PAPER_DATA = {
         best: { Spatial: 0, Object: 3, Goal: 2, Long: 2, Average: 2 },
         I: { Spatial: [-0.1, 0.4], Object: [0.7, 0.4], Goal: [-0.4, 0.5], Long: [3.6, 1.4], Average: [0.9, 0.4] },
         dagger: { Spatial: true, Goal: true },
-        latency_ms: null, speedup: "--" }
+        latency_ms: [55.6, 39.6, 13.9, 9.9], speedup: "5.6×" }
     ]
   },
 
