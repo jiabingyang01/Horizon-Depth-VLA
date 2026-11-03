@@ -5,7 +5,7 @@
    ========================================================================= */
 window.SITE_CONFIG = {
   links: {
-    paper: "paper.pdf",
+    paper: "https://arxiv.org/abs/2610.32102",
     code: "https://github.com/jiabingyang01/Horizon-Depth-VLA",
     video: "#rollouts"
   }

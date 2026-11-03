@@ -3,6 +3,7 @@
 # Coupling Execution Horizon and Sampling Depth in Flow-Matching VLA Policies
 
 <a href="https://jiabingyang01.github.io/Horizon-Depth-VLA/"><img src="https://img.shields.io/badge/Project_Page-Online-2E6F6B?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Project Page"></a>
+<a href="https://arxiv.org/abs/2610.32102"><img src="https://img.shields.io/badge/arXiv-2610.32102-B31B1B?style=for-the-badge&logo=arxiv&logoColor=white" alt="arXiv"></a>
 <a href="https://jiabingyang01.github.io/Horizon-Depth-VLA/paper.pdf"><img src="https://img.shields.io/badge/Paper-PDF-B84A2B?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="Paper PDF"></a>
 <a href="LICENSE.md"><img src="https://img.shields.io/badge/License-Apache_2.0-4E5D6C?style=for-the-badge" alt="License"></a>
 
@@ -116,7 +117,7 @@ If you find our empirical findings or analysis useful in your research, please c
 @article{yang2026coupling,
   title   = {Coupling Execution Horizon and Sampling Depth in Flow-Matching VLA Policies},
   author  = {Yang, Jiabing and Xu, Yuan and Chen, Yixiang and Ma, Qisen and Li, Peiyan and Wang, Kai and Cui, Chenhang and Yu, Tao and Wen, Zichen and Ye, Wen and Fang, Bowen and He, Ziheng and Wu, Xiangnan and Li, Yingda and Huang, Yan and Wang, Liang},
-  journal = {arXiv preprint},
+  journal = {arXiv preprint arXiv:2610.32102},
   year    = {2026}
 }
 ```
